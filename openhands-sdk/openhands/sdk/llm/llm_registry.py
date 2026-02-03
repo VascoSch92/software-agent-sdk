@@ -79,7 +79,10 @@ class LLMRegistry:
     @deprecated(
         deprecated_in="1.10.0",
         removed_in="1.20.0",
-        details="The method is deprecated and will be removed in next versions",
+        details=(
+            "This property is deprecated and will be removed in future versions.\n"
+            " Use list_usage_ids() and get() instead."
+        ),
     )
     def usage_to_llm(self) -> dict[str, LLM]:
         """Access the internal usage-ID-to-LLM mapping."""
@@ -127,10 +130,18 @@ class LLMRegistry:
             llm_instance = self._usage_to_llm[usage_id]
         elif self.profile_manager and usage_id in self.profile_manager.get_id_usages():
             profile_name = next(
-                p.name
-                for p in self.profile_manager.config.profiles
-                if p.usage_id == usage_id
+                (
+                    p.name
+                    for p in self.profile_manager.config.profiles
+                    if p.usage_id == usage_id
+                ),
+                None,
             )
+            if not profile_name:
+                raise KeyError(
+                    f"Usage ID '{usage_id}' not found in registry. "
+                    "Use add() to register an LLM first."
+                )
             llm_instance = self.profile_manager.load_profile(profile_name)
             self._usage_to_llm[usage_id] = llm_instance
         else:

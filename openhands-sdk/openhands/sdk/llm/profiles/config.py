@@ -13,7 +13,7 @@ _INVALID_PROFILE_NAMES: Final[set[str]] = {"", ".", "..", "config"}
 class ProfileMetadata(BaseModel):
     """Metadata associate to a profile."""
 
-    name: str = Field(description="Name of the profile", pattern=r"^[A-Za-z0-9._-]+$")
+    name: str = Field(description="Name of the profile", pattern=r"^[A-Za-z0-9._ -]+$")
     file: str = Field(description="Path to the profile file", pattern=r".*\.json$")
     description: str = Field(description="Description of the profile")
     usage_id: str | None = Field(default=None, description="Usage id of the profile")
@@ -65,7 +65,7 @@ class ProfilesConfig(BaseModel):
             if profile.usage_id is not None
         ]
         if len(id_usages) != len(set(id_usages)):
-            raise ValueError("ID usage are not uniques.")
+            raise ValueError("Usage IDs must be unique.")
 
         return self
 

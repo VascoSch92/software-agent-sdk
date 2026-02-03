@@ -149,6 +149,10 @@ class ProfileManager:
             self.config.profiles.append(profile_metadata)
         self._write_config()
 
+        # invalidate cache in case we are
+        # updating the default profile
+        self.get_default_profile.cache_clear()
+
         logger.info(f"[Profile Manager] Saved profile `{name}` at {profile_filepath}")
 
     def _write_config(self) -> None:

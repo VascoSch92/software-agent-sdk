@@ -8,6 +8,7 @@ def _get_profiles_metadata() -> list[tuple[str, ...]]:
     return [
         ("profile_1", "profile_1.json", "something"),
         ("Open.Hands-2_times", "gpt-4.json", ""),
+        ("My production profile", "gpt-4.json", ""),
     ]
 
 
